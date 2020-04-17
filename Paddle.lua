@@ -1,12 +1,19 @@
 Paddle = Class{}
 
-function Paddle:init(x, y, width, height)
+function Paddle:init(x, y, width, height, ai)
   self.x = x
   self.y = y
   self.width = width
   self.height = height
 
+  self.ai = ai
+
   self.dy = 0
+end
+
+-- Retrieve the center portion of the paddle.
+function Paddle:getCenterHeight()
+    return self.y + (self.height / 2)
 end
 
 function Paddle:update(dt)
