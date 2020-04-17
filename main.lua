@@ -63,8 +63,8 @@ function love.load()
   player1Score = 0
   player2Score = 0
 
-  player1 = Paddle(10, 30, 5, PADDLE_HEIGHT)
-  player2 = Paddle(V_WIDTH - 10, V_HEIGHT - 30, 5, PADDLE_HEIGHT)
+  player1 = Paddle(10, 30, 5, PADDLE_HEIGHT, true)
+  player2 = Paddle(V_WIDTH - 10, V_HEIGHT - 30, 5, PADDLE_HEIGHT, true)
 
   ball = Ball(V_WIDTH / 2 - 2,V_HEIGHT / 2 - 2, 4, 4)
   ball:reset()
@@ -80,8 +80,24 @@ end
 
 function love.update(dt)
   
-  -- Clamp the values for both up and down movements of the paddle
-  if love.keyboard.isDown('w') then
+  -- Player 1
+  if player1.ai and ball.dx < 0 then
+    -- Do this if the player 1 is AI controlled, and the ball is moving towards
+    -- player 1.
+    centerHeight1 = player1:getCenterHeight()
+    ballCenterHeight = ball.y + (ball.height / 2 )
+    if (centerHeight1 > ballCenterHeight + ball.height) then
+        -- The paddle center is lower than the ball, move up.
+        player1.dy = -PADDLE_SPEED
+    elseif (centerHeight1 < ballCenterHeight - ball.height) then
+        -- The paddle center is highter than the ball, move down.
+        player1.dy = PADDLE_SPEED
+    else
+        -- The paddle center is aligned with the ball.
+        player1.dy = 0
+    end
+
+  elseif love.keyboard.isDown('w') then
     player1.dy = -PADDLE_SPEED
   elseif love.keyboard.isDown('s') then
     player1.dy = PADDLE_SPEED
@@ -89,7 +105,24 @@ function love.update(dt)
     player1.dy = 0
   end
 
-  if love.keyboard.isDown('up') then
+  -- player 2
+  if player2.ai and ball.dx > 0 then 
+    -- Do this if the player 2 is AI controlled, and the ball is moving towards
+    -- player 2.
+    centerHeight2 = player2:getCenterHeight()
+    ballCenterHeight = ball.y + (ball.height / 2 )
+    if (centerHeight2 > ballCenterHeight + ball.height) then
+        -- The paddle center is lower than the ball, move up.
+        player2.dy = -PADDLE_SPEED
+    elseif (centerHeight2 < ballCenterHeight - ball.height) then
+        -- The paddle center is highter than the ball, move down.
+        player2.dy = PADDLE_SPEED
+    else
+        -- The paddle center is aligned with the ball.
+        player2.dy = 0
+    end
+
+  elseif love.keyboard.isDown('up') then
     player2.dy = -PADDLE_SPEED
   elseif love.keyboard.isDown('down') then
     player2.dy = PADDLE_SPEED
@@ -170,7 +203,7 @@ function love.draw()
   push:apply('start')
 
   -- Using the version 11 of Love2D, RGB values are fractions.
-  love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255)
+  love.graphics.clear(40, 45, 52, 255)
 
   love.graphics.setFont(smallFont)
 
@@ -201,7 +234,7 @@ end
 
 function displayFPS()
   love.graphics.setFont(smallFont)
-  love.graphics.setColor(0, 1, 0, 255)
+  love.graphics.setColor(0, 255, 0, 255)
   love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
 end
 
