@@ -6,3 +6,5 @@ As a requirement for CS50 GD, this has an update for the Pong game to include AI
 The AI themselves can only move the board as a normal player moves it. This means that the AI cannot accurately position the paddle relative to the ball, allowing for some miss alignments.
 
 Made with Love2D (v0.10.2)
+
+A demo: https://www.youtube.com/watch?v=BPQ9mn61VIc
